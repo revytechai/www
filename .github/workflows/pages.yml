@@ -21,6 +21,8 @@ concurrency:
 
 jobs:
   index:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262   # v4
@@ -32,7 +34,8 @@ jobs:
         run: |
           set -eu
           mkdir -p _site
-          cp index.html site.css CNAME _site/
+          cp index.html site.css _site/
+          [ ! -f CNAME ] || cp CNAME _site/
           python3 scripts/make-index.py "$ORG" > _site/repos.json
           python3 scripts/make-index.py "$ORG" --js > _site/repos.js
 
