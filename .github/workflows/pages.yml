@@ -32,12 +32,14 @@ jobs:
         run: |
           set -eu
           mkdir -p _site
-          cp index.html site.css _site/
+          cp index.html site.css CNAME _site/
           python3 scripts/make-index.py "$ORG" > _site/repos.json
           python3 scripts/make-index.py "$ORG" --js > _site/repos.js
 
       - name: Publish
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa   # v3
+        with:
+          path: _site
 
   deploy:
     needs: index
