@@ -1,0 +1,54 @@
+name: pages
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+# Least privilege. A job-level permissions block REPLACES the workflow-level
+# one, it does not inherit from it, so each job is given exactly what it
+# needs and nothing is left to chance.
+permissions:
+  contents: read
+
+# A deployment that is cancelled mid-flight can leave Pages in a failed
+# deployment state, so queued runs wait rather than cutting the previous one
+# short.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262   # v4
+
+      - name: Regenerate the repository index
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ORG: revytechai
+        run: |
+          set -eu
+          mkdir -p _site
+          cp index.html site.css _site/
+          python3 scripts/make-index.py "$ORG" > _site/repos.json
+          python3 scripts/make-index.py "$ORG" --js > _site/repos.js
+
+      - name: Publish
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa   # v3
+
+  deploy:
+    needs: index
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e   # v4
