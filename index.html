@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REVYTECH AI</title>
+<meta name="description" content="REVYTECH platform tooling, services and the catalogues behind them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<header class="bar">
+  <a class="wordmark" href="/">REVYTECH<span class="bsd">.AI</span></a>
+  <nav>
+    <a href="https://github.com/revytechai">GitHub</a>
+    <a href="https://github.com/orgs/revytechai/repositories">All repositories</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>REVYTECH AI</h1>
+    <p class="tagline">REVYTECH platform tooling, services and the catalogues behind them.</p>
+  </section>
+
+  <section class="grid-section">
+    <h2>Repositories</h2>
+    <p class="meta" id="meta">Loading the index&hellip;</p>
+    <div class="grid" id="grid"></div>
+  </section>
+</main>
+
+<footer>
+  <span>REVYTECH, Inc.</span>
+  <span class="dot">&middot;</span>
+  <a href="https://github.com/revytechai">github.com/revytechai</a>
+</footer>
+
+<script src="repos.js"></script>
+<script>
+(function () {
+  var grid = document.getElementById('grid');
+  var meta = document.getElementById('meta');
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined && text !== null) n.textContent = text;
+    return n;
+  }
+
+  function render(data) {
+    if (!data || !data.repos || !data.repos.length) {
+      meta.textContent = 'No repositories published yet.';
+      return;
+    }
+    var when = data.generated ? 'index generated ' + data.generated : '';
+    meta.textContent = data.repos.length + ' repositor' + (data.repos.length === 1 ? 'y' : 'ies') +
+      (when ? ' · ' + when : '');
+    data.repos.forEach(function (r) {
+      var card = el('article', 'card');
+      var h = el('h3');
+      var a = el('a', null, r.name);
+      a.href = r.url;
+      a.target = '_blank';
+      a.rel = 'noreferrer';
+      h.appendChild(a);
+      card.appendChild(h);
+      if (r.description) card.appendChild(el('p', 'desc', r.description));
+      var tags = el('p', 'tags');
+      if (r.lang) tags.appendChild(el('span', 'tag', r.lang));
+      if (r.topics && r.topics.length) {
+        r.topics.forEach(function (t) { tags.appendChild(el('span', 'tag topic', t)); });
+      }
+      if (tags.childNodes.length) card.appendChild(tags);
+      grid.appendChild(card);
+    });
+  }
+
+  // repos.js is the generated index, so a plain file:// open works with no fetch.
+  if (window.__REPOS__) { render(window.__REPOS__); }
+  else {
+    fetch('repos.json', { cache: 'no-store' })
+      .then(function (res) { return res.json(); })
+      .then(render)
+      .catch(function () {
+        meta.textContent = 'The repository index is not available yet.';
+      });
+  }
+})();
+</script>
+</body>
+</html>

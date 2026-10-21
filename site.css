@@ -1,0 +1,131 @@
+/* SPDX-License-Identifier: BSD-2-Clause
+ *
+ * CloudBSD brand chrome for organisation pages.
+ *
+ * Tokens are the shipped ones from cloudbsd.ai: navy ground, brand blue for
+ * fills and borders, cyan for the wordmark half only. A colour named for what
+ * it holds, so nobody later reports a contrast failure against the wrong one.
+ */
+:root {
+  --cloudbsd-ground:         #0f172a;
+  --cloudbsd-surface:        #1e293b;
+  --cloudbsd-surface-raised: #334155;
+  --cloudbsd-text:           #ffffff;
+  --cloudbsd-text-muted:     #9ca3af;
+  --cloudbsd-blue:           #00529b;
+  --cloudbsd-red:            #d32f2f;
+  --cloudbsd-wordmark-cyan:  #22d3ee;
+  --font-display: "Outfit", sans-serif;
+  --font-ui: "Inter", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cloudbsd-ground);
+  color: var(--cloudbsd-text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--cloudbsd-wordmark-cyan); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--cloudbsd-ground);
+  border-bottom: 1px solid var(--cloudbsd-blue);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: 1.3rem;
+  color: var(--cloudbsd-text);
+}
+.wordmark .bsd { color: var(--cloudbsd-wordmark-cyan); }
+
+.bar nav { display: flex; gap: 1.1rem; font-size: 0.92rem; }
+.bar nav a { color: var(--cloudbsd-text-muted); }
+.bar nav a:hover { color: var(--cloudbsd-text); }
+
+main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.25rem 3rem; }
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.35rem;
+}
+.hero .tagline {
+  color: var(--cloudbsd-text-muted);
+  font-size: 1.05rem;
+  margin: 0 0 2.5rem;
+  max-width: 60ch;
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+}
+
+.meta { color: var(--cloudbsd-text-muted); font-size: 0.9rem; margin: 0 0 1.1rem; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 0.9rem;
+}
+
+.card {
+  background: var(--cloudbsd-surface);
+  border: 1px solid var(--cloudbsd-surface-raised);
+  border-left: 3px solid var(--cloudbsd-blue);
+  border-radius: 8px;
+  padding: 0.95rem 1.05rem;
+}
+.card:hover { border-color: var(--cloudbsd-blue); }
+
+.card h3 { font-family: var(--font-display); font-size: 1.02rem; margin: 0 0 0.35rem; }
+.card h3 a { color: var(--cloudbsd-text); }
+.card .desc { margin: 0 0 0.6rem; color: var(--cloudbsd-text-muted); font-size: 0.9rem; }
+
+.tags { margin: 0; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.tag {
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--cloudbsd-text-muted);
+  border: 1px solid var(--cloudbsd-surface-raised);
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+}
+.tag.topic { color: var(--cloudbsd-wordmark-cyan); }
+
+footer {
+  border-top: 1px solid var(--cloudbsd-surface);
+  color: var(--cloudbsd-text-muted);
+  font-size: 0.85rem;
+  padding: 1.25rem;
+  text-align: center;
+}
+footer .dot { margin: 0 0.4rem; }
+
+@media (max-width: 640px) {
+  .bar { flex-wrap: wrap; }
+  main { padding-top: 1.75rem; }
+}
